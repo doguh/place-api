@@ -18,7 +18,8 @@ function _getCanvasCollection() {
  */
 async function getCanvasData() {
   return _getCanvasCollection()
-    .find({}, { projection: { _id: 0 } })
+    .find({}, { projection: { _id: 0, x: 1, y: 1, color: 1 } })
+    .sort({ x: 1, y: 1 })
     .toArray();
 }
 
@@ -30,6 +31,7 @@ async function getCanvasData() {
  * @returns {boolean} true in case of success
  */
 async function setPixel(x, y, color) {
+  // TODO log updates events in another collection
   await _getCanvasCollection().update(
     { x, y },
     { x, y, color },
