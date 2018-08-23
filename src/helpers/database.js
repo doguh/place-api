@@ -24,7 +24,7 @@ async function connect(uri, name, options = {}) {
  * @param {string} name database name
  * @returns {Database} database
  */
-function getDatabse(name) {
+function getDatabase(name) {
   return databases[name];
 }
 
@@ -49,6 +49,6 @@ async function getCursorDocuments(cursor) {
 
 module.exports = {
   connect,
-  getDatabse,
+  getDatabase,
   getCursorDocuments
 };
