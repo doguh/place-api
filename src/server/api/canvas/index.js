@@ -1,5 +1,7 @@
 const { Router } = require("express");
+const { sseHub } = require("@toverux/expresse");
 const controller = require("./canvas.controller");
+const { hub } = require("../../../models/canvas");
 const wrapper = require("../../../helpers/wrapper");
 
 const router = Router();
@@ -45,5 +47,15 @@ router.get("/", wrapper(controller.get));
  * }
  */
 router.post("/", wrapper(controller.post));
+
+/**
+ * @api {get} /api/canvas/sub
+ * @apiGroup canvas
+ *
+ * @apiDescription Suscribe to Server Sent Events for updates about tile changes
+ */
+router.get("/sub", sseHub({ hub }), () => {
+  console.log("new suscriber");
+});
 
 module.exports = router;

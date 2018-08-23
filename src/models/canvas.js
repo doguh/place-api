@@ -1,8 +1,14 @@
 const mongodb = require("mongodb");
 const amqp = require("amqplib");
+const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
 const q = config.amqp.queue;
+
+/**
+ * SSE Hub, used to notify clients of color changes
+ */
+const hub = new Hub();
 
 /**
  * The mongodb collection used to store tiles colors
@@ -34,7 +40,8 @@ async function init() {
   channel.consume(
     q,
     msg => {
-      console.log("amqp message received: %s", msg.content.toString());
+      const data = JSON.parse(msg.content.toString());
+      hub.data(data);
     },
     { noAck: true }
   );
@@ -73,6 +80,7 @@ async function setPixel(x, y, color) {
 
 module.exports = {
   init,
+  hub,
   getCanvasData,
   setPixel
 };
