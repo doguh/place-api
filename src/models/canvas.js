@@ -30,7 +30,11 @@ async function getCanvasData() {
  * @returns {boolean} true in case of success
  */
 async function setPixel(x, y, color) {
-  await _getCanvasCollection().update({ x, y }, { color }, { upsert: true });
+  await _getCanvasCollection().update(
+    { x, y },
+    { x, y, color },
+    { upsert: true }
+  );
   return true;
 }
 
