@@ -9,6 +9,6 @@ module.exports = {
   },
   amqp: {
     uri: process.env.AMQP_URI || "amqp://localhost",
-    queue: "canvas"
+    exchange: "cnv"
   }
 };

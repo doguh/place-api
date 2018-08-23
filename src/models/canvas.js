@@ -3,8 +3,6 @@ const amqp = require("amqplib");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
-const q = config.amqp.queue;
-
 /**
  * SSE Hub, used to notify clients of color changes
  */
@@ -36,10 +34,12 @@ async function init() {
   // init rabbitmq channel
   const conn = await amqp.connect(config.amqp.uri);
   channel = await conn.createChannel();
-  channel.assertQueue(q, { durable: false });
+  channel.assertExchange(config.amqp.exchange, "fanout", { durable: false });
+  const q = await channel.assertQueue("", { exclusive: true });
+  channel.bindQueue(q.queue, config.amqp.exchange, "");
   channel.consume(
-    q,
-    msg => {
+    q.queue,
+    function(msg) {
       const data = JSON.parse(msg.content.toString());
       hub.data(data);
     },
@@ -74,7 +74,7 @@ async function setPixel(x, y, color) {
     { upsert: true }
   );
   const msg = JSON.stringify({ x, y, color });
-  channel.sendToQueue(q, Buffer.from(msg));
+  channel.publish(config.amqp.exchange, "", Buffer.from(msg));
   return true;
 }
 
