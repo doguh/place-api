@@ -3,32 +3,42 @@ const amqp = require("amqplib");
 const config = require("../config");
 
 const q = config.amqp.queue;
-let collection;
-let chwrite;
 
+/**
+ * The mongodb collection used to store tiles colors
+ */
+let collection;
+
+/**
+ * Rabbitmq channel used to read/write pixel color change events
+ */
+let channel;
+
+/**
+ * Initialize the canvas application (database, rabbitmq)
+ * @returns {Promise<void>} Promise
+ */
 async function init() {
+  // init database
   const db = await mongodb.MongoClient.connect(
     config.db.uri,
     { useNewUrlParser: true }
   );
+  console.log("db ready");
   collection = db.db(config.db.name).collection(config.db.collection);
 
-  const reader = await amqp.connect(config.amqp.uri);
-  const chread = await reader.createChannel();
-  chread.assertQueue(q, { durable: false });
-  chread.consume(
+  // init rabbitmq channel
+  const conn = await amqp.connect(config.amqp.uri);
+  channel = await conn.createChannel();
+  channel.assertQueue(q, { durable: false });
+  channel.consume(
     q,
     msg => {
       console.log("amqp message received: %s", msg.content.toString());
     },
     { noAck: true }
   );
-
-  const writer = await amqp.connect(config.amqp.uri);
-
-  chwrite = await writer.createChannel();
-
-  chwrite.assertQueue(q, { durable: false });
+  console.log("amqp ready");
 }
 
 /**
@@ -57,7 +67,7 @@ async function setPixel(x, y, color) {
     { upsert: true }
   );
   const msg = JSON.stringify({ x, y, color });
-  chwrite.sendToQueue(q, Buffer.from(msg));
+  channel.sendToQueue(q, Buffer.from(msg));
   return true;
 }
 
