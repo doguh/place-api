@@ -1,3 +1,5 @@
+const Joi = require("joi");
+const schemas = require("./canvas.schemas");
 const canvas = require("../../../models/canvas");
 
 /**
@@ -18,6 +20,7 @@ async function get(req, res) {
  * @returns {Promise<any>}
  */
 async function post(req, res) {
+  const requestData = Joi.attempt(req.body, schemas.post);
   await canvas.setPixel(requestData.x, requestData.y, requestData.color);
   res.status(200).send({ success: true });
 }
