@@ -6,5 +6,9 @@ module.exports = {
     uri: process.env.MONGO_URI || "mongodb://localhost:27017/place",
     name: "place",
     collection: "canvas"
+  },
+  amqp: {
+    uri: process.env.AMQP_URI || "amqp://localhost",
+    queue: "canvas"
   }
 };

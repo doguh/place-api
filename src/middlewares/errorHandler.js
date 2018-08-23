@@ -11,6 +11,8 @@ function errorHandler(err, req, res, next) {
     return next();
   }
 
+  console.error({ err }, "ERROR HANDLER");
+
   const body = {};
 
   assignJwtError(err, body) ||
