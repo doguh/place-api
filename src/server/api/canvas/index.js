@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const controller = require("./canvas.controller");
+const wrapper = require("../../../helpers/wrapper");
 
 const router = Router();
 
@@ -18,7 +19,7 @@ const router = Router();
  *   [{ x: 0, y: 0, color: 0 }, ...]
  * }
  */
-router.get("/", controller.get);
+router.get("/", wrapper(controller.get));
 
 /**
  * @api {post} /api/canvas
@@ -43,6 +44,6 @@ router.get("/", controller.get);
  *   success: true
  * }
  */
-router.post("/", controller.post);
+router.post("/", wrapper(controller.post));
 
 module.exports = router;
