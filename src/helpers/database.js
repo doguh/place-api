@@ -28,27 +28,7 @@ function getDatabase(name) {
   return databases[name];
 }
 
-/**
- * loop through a Mongodb Cursor and returns its documents
- *
- * @param {*} cursor a Mongodb Cursor
- *
- * @return {Array} array of documents
- */
-async function getCursorDocuments(cursor) {
-  const results = co(function* g() {
-    const docs = [];
-    while (yield cursor.hasNext()) {
-      docs.push(yield cursor.next());
-    }
-    return docs;
-  });
-  const rs = await Promise.resolve(results);
-  return rs;
-}
-
 module.exports = {
   connect,
-  getDatabase,
-  getCursorDocuments
+  getDatabase
 };

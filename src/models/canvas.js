@@ -17,9 +17,9 @@ function _getCanvasCollection() {
  * @returns {Promise<any[]>} the data
  */
 async function getCanvasData() {
-  const cursor = _getCanvasCollection().find({});
-  const data = await database.getCursorDocuments(cursor);
-  return data;
+  return _getCanvasCollection()
+    .find({})
+    .toArray();
 }
 
 /**
