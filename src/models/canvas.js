@@ -18,7 +18,7 @@ function _getCanvasCollection() {
  */
 async function getCanvasData() {
   return _getCanvasCollection()
-    .find({})
+    .find({}, { projection: { _id: 0 } })
     .toArray();
 }
 
