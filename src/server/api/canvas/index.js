@@ -15,7 +15,7 @@ const router = Router();
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  * {
- *   ...
+ *   [{ x: 0, y: 0, color: 0 }, ...]
  * }
  */
 router.get("/", controller.get);
