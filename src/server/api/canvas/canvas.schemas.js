@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 module.exports = {
-  post: Joi.object({
+  post: Joi.object().keys({
     x: Joi.number()
       .integer()
       .required(),
