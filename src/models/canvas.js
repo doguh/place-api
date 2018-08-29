@@ -2,16 +2,12 @@ const mongodb = require("mongodb");
 const amqp = require("amqplib");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
+const mongoHelper = require("../helpers/mongo");
 
 /**
  * SSE Hub, used to notify clients of color changes
  */
 const hub = new Hub();
-
-/**
- * The mongodb collection used to store tiles colors
- */
-let collection;
 
 /**
  * Rabbitmq channel used to read/write pixel color change events
@@ -23,14 +19,6 @@ let channel;
  * @returns {Promise<void>} Promise
  */
 async function init() {
-  // init database
-  const db = await mongodb.MongoClient.connect(
-    config.db.uri,
-    { useNewUrlParser: true }
-  );
-  console.log("db ready");
-  collection = db.db(config.db.name).collection(config.db.collection);
-
   // init rabbitmq channel
   const conn = await amqp.connect(config.amqp.uri);
   channel = await conn.createChannel();
@@ -53,7 +41,8 @@ async function init() {
  * @returns {Promise<any[]>} the data
  */
 async function getCanvasData() {
-  return collection
+  return mongoHelper
+    .collection(config.db.collection)
     .find({}, { projection: { _id: 0, x: 1, y: 1, color: 1 } })
     .sort({ x: 1, y: 1 })
     .toArray();
@@ -68,11 +57,9 @@ async function getCanvasData() {
  */
 async function setPixel(x, y, color) {
   // TODO log updates events in another collection
-  await collection.updateOne(
-    { x, y },
-    { $set: { x, y, color } },
-    { upsert: true }
-  );
+  await mongoHelper
+    .collection(config.db.collection)
+    .updateOne({ x, y }, { $set: { x, y, color } }, { upsert: true });
   const msg = JSON.stringify({ x, y, color });
   channel.publish(config.amqp.exchange, "", Buffer.from(msg));
   return true;

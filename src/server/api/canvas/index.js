@@ -52,9 +52,10 @@ router.post("/", wrapper(controller.post));
  * @api {get} /api/canvas/sub
  * @apiGroup canvas
  *
- * @apiDescription Suscribe to Server Sent Events for updates about tile changes
+ * @apiDescription Subscribe to Server Sent Events for updates about tile changes
  */
 router.get("/sub", sseHub({ hub }), () => {
+  // nothing to do here, everything is done within the sseHub middleware
   console.log("new suscriber");
 });
 
