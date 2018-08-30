@@ -1,5 +1,3 @@
-const mongodb = require("mongodb");
-const amqp = require("amqplib");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
