@@ -1,8 +1,11 @@
-const mongodb = require("mongodb");
-const amqp = require("amqplib");
+const fs = require("fs");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
-const mongoHelper = require("../helpers/mongo");
+
+/**
+ * Buffer used to store canvas pixels
+ */
+const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
 
 /**
  * SSE Hub, used to notify clients of color changes
@@ -10,42 +13,40 @@ const mongoHelper = require("../helpers/mongo");
 const hub = new Hub();
 
 /**
- * Rabbitmq channel used to read/write pixel color change events
+ * initialize the canvas
+ * @returns {void}
  */
-let channel;
-
-/**
- * Initialize the canvas application (database, rabbitmq)
- * @returns {Promise<void>} Promise
- */
-async function init() {
-  // init rabbitmq channel
-  const conn = await amqp.connect(config.amqp.uri);
-  channel = await conn.createChannel();
-  channel.assertExchange(config.amqp.exchange, "fanout", { durable: false });
-  const q = await channel.assertQueue("", { exclusive: true });
-  channel.bindQueue(q.queue, config.amqp.exchange, "");
-  channel.consume(
-    q.queue,
-    function(msg) {
-      const data = JSON.parse(msg.content.toString());
-      hub.data(data);
-    },
-    { noAck: true }
-  );
-  console.log("amqp ready");
+function init() {
+  try {
+    const savedBuffer = fs.readFileSync(config.canvas.file);
+    savedBuffer.copy(buffer);
+  } catch (error) {
+    console.log(`buffer file ${config.canvas.file} does not exist yet`);
+    fs.writeFileSync(config.canvas.file, buffer);
+  }
 }
 
 /**
  * Get the canvas data
- * @returns {Promise<any[]>} the data
+ * @returns {any} object containing informations about canvas
  */
-async function getCanvasData() {
-  return mongoHelper
-    .collection(config.db.collection)
-    .find({}, { projection: { _id: 0, x: 1, y: 1, color: 1 } })
-    .sort({ x: 1, y: 1 })
-    .toArray();
+function getCanvasData() {
+  const data = buffer.toString("base64");
+  return {
+    width: config.canvas.width,
+    height: config.canvas.height,
+    data,
+    colors: [
+      "#FFFFFF",
+      "#000000",
+      "#FF0000",
+      "#00FF00",
+      "#0000FF",
+      "#FFFF00",
+      "#FF00FF",
+      "#00FFFF"
+    ]
+  };
 }
 
 /**
@@ -55,14 +56,15 @@ async function getCanvasData() {
  * @param {number} color New pixel's color
  * @returns {boolean} true in case of success
  */
-async function setPixel(x, y, color) {
-  // TODO log updates events in another collection
-  await mongoHelper
-    .collection(config.db.collection)
-    .updateOne({ x, y }, { $set: { x, y, color } }, { upsert: true });
-  const msg = JSON.stringify({ x, y, color });
-  channel.publish(config.amqp.exchange, "", Buffer.from(msg));
-  return true;
+function setPixel(x, y, color) {
+  // TODO log updates events in a mongo collection
+  buffer.writeInt8(color, x + y * config.canvas.width);
+  hub.data({ x, y, color });
+  fs.writeFile(config.canvas.file, buffer, err => {
+    if (err) {
+      console.error(err, "error while saving buffer to file");
+    }
+  });
 }
 
 module.exports = {
