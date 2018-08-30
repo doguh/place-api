@@ -1,6 +1,10 @@
+const fs = require("fs");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
+/**
+ * Buffer used to store canvas pixels
+ */
 const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
 
 /**
@@ -9,9 +13,18 @@ const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
 const hub = new Hub();
 
 /**
- * @returns {Promise<void>} Promise
+ * initialize the canvas
+ * @returns {void}
  */
-async function init() {}
+function init() {
+  try {
+    const savedBuffer = fs.readFileSync(config.canvas.file);
+    savedBuffer.copy(buffer);
+  } catch (error) {
+    console.log(`buffer file ${config.canvas.file} does not exist yet`);
+    fs.writeFileSync(config.canvas.file, buffer);
+  }
+}
 
 /**
  * Get the canvas data
@@ -29,9 +42,14 @@ function getCanvasData() {
  * @returns {boolean} true in case of success
  */
 function setPixel(x, y, color) {
-  // TODO log updates events in another collection
+  // TODO log updates events in a mongo collection
   buffer.writeInt8(color, x + y * config.canvas.width);
   hub.data({ x, y, color });
+  fs.writeFile(config.canvas.file, buffer, err => {
+    if (err) {
+      console.error(err, "error while saving buffer to file");
+    }
+  });
 }
 
 module.exports = {
