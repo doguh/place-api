@@ -31,6 +31,7 @@ function getCanvasData() {
 function setPixel(x, y, color) {
   // TODO log updates events in another collection
   buffer.writeInt8(color, x + y * config.canvas.width);
+  hub.data({ x, y, color });
 }
 
 module.exports = {
