@@ -28,10 +28,25 @@ function init() {
 
 /**
  * Get the canvas data
- * @returns {String} base64 encoded data
+ * @returns {any} object containing informations about canvas
  */
 function getCanvasData() {
-  return buffer.toString("base64");
+  const data = buffer.toString("base64");
+  return {
+    width: config.canvas.width,
+    height: config.canvas.height,
+    data,
+    colors: [
+      "#FFFFFF",
+      "#000000",
+      "#FF0000",
+      "#00FF00",
+      "#0000FF",
+      "#FFFF00",
+      "#FF00FF",
+      "#00FFFF"
+    ]
+  };
 }
 
 /**
