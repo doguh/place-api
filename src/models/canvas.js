@@ -3,6 +3,8 @@ const amqp = require("amqplib");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
+const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
+
 /**
  * SSE Hub, used to notify clients of color changes
  */
@@ -15,10 +17,10 @@ async function init() {}
 
 /**
  * Get the canvas data
- * @returns {Promise<any[]>} the data
+ * @returns {String} base64 encoded data
  */
-async function getCanvasData() {
-  // TODO
+function getCanvasData() {
+  return buffer.toString("base64");
 }
 
 /**
@@ -28,9 +30,9 @@ async function getCanvasData() {
  * @param {number} color New pixel's color
  * @returns {boolean} true in case of success
  */
-async function setPixel(x, y, color) {
+function setPixel(x, y, color) {
   // TODO log updates events in another collection
-  // TODO
+  buffer.writeInt8(color, x + y * config.canvas.width);
 }
 
 module.exports = {

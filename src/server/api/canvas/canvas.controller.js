@@ -9,7 +9,7 @@ const canvas = require("../../../models/canvas");
  * @returns {Promise<any>}
  */
 async function get(req, res) {
-  const data = await canvas.getCanvasData();
+  const data = canvas.getCanvasData();
   res.status(200).send(data);
 }
 
@@ -21,7 +21,7 @@ async function get(req, res) {
  */
 async function post(req, res) {
   const requestData = Joi.attempt(req.body, schemas.post);
-  await canvas.setPixel(requestData.x, requestData.y, requestData.color);
+  canvas.setPixel(requestData.x, requestData.y, requestData.color);
   res.status(200).send({ success: true });
 }
 
