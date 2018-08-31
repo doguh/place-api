@@ -66,7 +66,7 @@ const saveBufferToFile = throttle(() => {
       console.error(err, "error while saving buffer to file");
     }
   });
-}, 5000);
+}, config.canvas.saveThrottle);
 
 module.exports = {
   init,
