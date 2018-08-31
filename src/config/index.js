@@ -1,6 +1,6 @@
 module.exports = {
   server: {
-    port: process.env.PORT || 80
+    port: process.env.PORT || 9000
   },
   canvas: {
     width: process.env.CANVAS_WIDTH || 256,
