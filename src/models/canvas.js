@@ -35,17 +35,8 @@ function getCanvasData() {
   return {
     width: config.canvas.width,
     height: config.canvas.height,
-    data,
-    colors: [
-      "#FFFFFF",
-      "#000000",
-      "#FF0000",
-      "#00FF00",
-      "#0000FF",
-      "#FFFF00",
-      "#FF00FF",
-      "#00FFFF"
-    ]
+    colors: config.canvas.colors,
+    data
   };
 }
 

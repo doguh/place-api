@@ -5,6 +5,16 @@ module.exports = {
   canvas: {
     width: process.env.CANVAS_WIDTH || 256,
     height: process.env.CANVAS_HEIGHT || 256,
-    file: process.env.CANVAS_FILE || "./canvas.buff"
+    file: process.env.CANVAS_FILE || "./canvas.buff",
+    colors: [
+      "#FFFFFF",
+      "#000000",
+      "#FF0000",
+      "#00FF00",
+      "#0000FF",
+      "#FFFF00",
+      "#FF00FF",
+      "#00FFFF"
+    ]
   }
 };
