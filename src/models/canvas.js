@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { throttle } = require("lodash");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 
@@ -51,12 +52,21 @@ function setPixel(x, y, color) {
   // TODO log updates events in a mongo collection
   buffer.writeInt8(color, x + y * config.canvas.width);
   hub.data({ x, y, color });
+  saveBufferToFile();
+}
+
+/**
+ * Throttled function that saves the buffer data to the filesystem,
+ * at most every 5 seconds
+ */
+const saveBufferToFile = throttle(() => {
+  console.log("saving buffer data to filesystem");
   fs.writeFile(config.canvas.file, buffer, err => {
     if (err) {
       console.error(err, "error while saving buffer to file");
     }
   });
-}
+}, 5000);
 
 module.exports = {
   init,
