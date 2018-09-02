@@ -8,14 +8,22 @@ module.exports = {
     file: process.env.CANVAS_SAVE_FILE || "./canvas.buff",
     saveThrottle: process.env.CANVAS_SAVE_THROTTLE || 5000,
     colors: [
-      "#FFFFFF",
-      "#000000",
-      "#FF0000",
-      "#00FF00",
-      "#0000FF",
-      "#FFFF00",
-      "#FF00FF",
-      "#00FFFF"
+      "#ffffff", // white
+      "#222222", // black
+      "#e4e4e4", // lightgrey
+      "#888888", // darkgrey
+      "#e50000", // red
+      "#a06a42", // brown
+      "#e59500", // orange
+      "#e5d900", // yellow
+      "#94e044", // lightgreen
+      "#02be01", // green
+      "#00d3dd", // lightblue
+      "#0083c7", // darkblue
+      "#0000ea", // blue
+      "#820080", // purple
+      "#cf6ee4", // lightpurple
+      "#ffa7d1" // pink
     ]
   }
 };
