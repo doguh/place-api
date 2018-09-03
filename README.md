@@ -4,6 +4,8 @@ Backend API for my Place application - inspired from [r/place](https://www.reddi
 
 Front end here: https://github.com/doguh/place-client
 
+See it in action here: https://place.hugod.fr
+
 ## How to use
 
 ```
