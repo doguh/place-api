@@ -25,3 +25,4 @@ npm run start:dev
 | LOG_EVENTS           | Boolean indicating if pixel color change events should be logged in a mongo collection | true            |
 | MONGO_URI            | Mongodb connection URI                                                                 | localhost:27017 |
 | PORT                 | Port used by the server                                                                | 9000            |
+| TRUST_PROXY          | The app is ran under a trusted proxy                                                   | false           |

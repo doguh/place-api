@@ -6,6 +6,10 @@ const mongoHelper = require("./helpers/mongo");
 
 const app = express();
 
+if (config.trustProxy) {
+  app.enable("trust proxy");
+}
+
 app.listen(config.server.port, async () => {
   if (config.logEvents) {
     await mongoHelper.connect(
