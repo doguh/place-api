@@ -2,6 +2,7 @@ const fs = require("fs");
 const { throttle } = require("lodash");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
+const mongoHelper = require("../helpers/mongo");
 
 /**
  * Buffer used to store canvas pixels
@@ -46,13 +47,24 @@ function getCanvasData() {
  * @param {number} x Pixel's x coordinate
  * @param {number} y Pixel's y coordinate
  * @param {number} color New pixel's color
+ * @param {Request} req express request
  * @returns {boolean} true in case of success
  */
-function setPixel(x, y, color) {
-  // TODO log updates events in a mongo collection
+function setPixel(x, y, color, req) {
   buffer.writeInt8(color, x + y * config.canvas.width);
   hub.data({ x, y, color });
   saveBufferToFile();
+
+  if (config.logEvents && req) {
+    mongoHelper.collection("events").insertOne({
+      px: { x, y, color },
+      meta: {
+        ip: req.ip,
+        userAgent: req.headers["user-agent"],
+        date: new Date()
+      }
+    });
+  }
 }
 
 /**
