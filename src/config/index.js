@@ -25,5 +25,10 @@ module.exports = {
       "#cf6ee4", // lightpurple
       "#ffa7d1" // pink
     ]
-  }
+  },
+  db: {
+    uri: process.env.MONGO_URI || "mongodb://localhost:27017/place",
+    name: process.env.DB_NAME || "place"
+  },
+  logEvents: process.env.LOG_EVENTS ? process.env.LOG_EVENTS === "true" : true
 };

@@ -15,10 +15,13 @@ npm run start:dev
 
 ## Environment variables
 
-| Name                 | Description                                            | Default     |
-| -------------------- | ------------------------------------------------------ | ----------- |
-| CANVAS_HEIGHT        | Height of the canvas                                   | 256         |
-| CANVAS_SAVE_FILE     | Path to the file were should be stored the canvas data | canvas.buff |
-| CANVAS_SAVE_THROTTLE | Save canvas at most once per every x milliseconds      | 5000        |
-| CANVAS_WIDTH         | Width of the canvas                                    | 256         |
-| PORT                 | Port used by the server                                | 9000        |
+| Name                 | Description                                                                            | Default         |
+| -------------------- | -------------------------------------------------------------------------------------- | --------------- |
+| CANVAS_HEIGHT        | Height of the canvas                                                                   | 256             |
+| CANVAS_SAVE_FILE     | Path to the file were should be stored the canvas data                                 | canvas.buff     |
+| CANVAS_SAVE_THROTTLE | Save canvas at most once per every x milliseconds                                      | 5000            |
+| CANVAS_WIDTH         | Width of the canvas                                                                    | 256             |
+| DB_NAME              | Database name used to store events                                                     | place           |
+| LOG_EVENTS           | Boolean indicating if pixel color change events should be logged in a mongo collection | true            |
+| MONGO_URI            | Mongodb connection URI                                                                 | localhost:27017 |
+| PORT                 | Port used by the server                                                                | 9000            |
