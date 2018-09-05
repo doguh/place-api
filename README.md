@@ -22,7 +22,7 @@ npm run start:dev
 | CANVAS_SAVE_THROTTLE | Save canvas at most once per every x milliseconds                                      | 5000            |
 | CANVAS_WIDTH         | Width of the canvas                                                                    | 256             |
 | DB_NAME              | Database name used to store events                                                     | place           |
-| LOG_EVENTS           | Boolean indicating if pixel color change events should be logged in a mongo collection | true            |
+| LOG_EVENTS           | Boolean indicating if pixel color change events should be logged in a mongo collection | false           |
 | MONGO_URI            | Mongodb connection URI                                                                 | localhost:27017 |
 | PORT                 | Port used by the server                                                                | 9000            |
 | TRUST_PROXY          | The app is ran under a trusted proxy                                                   | false           |

@@ -30,6 +30,6 @@ module.exports = {
     uri: process.env.MONGO_URI || "mongodb://localhost:27017/place",
     name: process.env.DB_NAME || "place"
   },
-  logEvents: process.env.LOG_EVENTS ? process.env.LOG_EVENTS === "true" : true,
+  logEvents: process.env.LOG_EVENTS === "true",
   trustProxy: process.env.TRUST_PROXY || false
 };
