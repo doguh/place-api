@@ -43,7 +43,7 @@ router.get("/", wrapper(controller.get));
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  * {
- *   success: true
+ *   updated: true
  * }
  */
 router.post("/", wrapper(controller.post));
