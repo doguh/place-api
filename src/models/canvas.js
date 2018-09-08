@@ -13,7 +13,7 @@ const hub = new Hub();
 /**
  * Jimp Image
  */
-let image;
+const image = new Jimp(config.canvas.width, config.canvas.height, "#FFFFFFFF");
 
 /**
  * initialize the canvas
@@ -21,10 +21,10 @@ let image;
  */
 async function init() {
   try {
-    image = await Jimp.read(config.canvas.file);
+    const savedImage = await Jimp.read(config.canvas.file);
+    image.composite(savedImage, 0, 0);
   } catch (error) {
     console.log(`file ${config.canvas.file} does not exist yet`);
-    image = new Jimp(config.canvas.width, config.canvas.height, "#FFFFFFFF");
   }
 }
 
