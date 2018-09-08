@@ -51,13 +51,18 @@ async function getCanvasData() {
  * @returns {boolean} true in case of success
  */
 function setPixel(x, y, color, req) {
-  image.setPixelColor(Jimp.cssColorToHex(config.canvas.colors[color]), x, y);
-  hub.data({ x, y, color });
+  const cssColor = config.canvas.colors[color];
+  const realColor = Jimp.cssColorToHex(cssColor);
+  if (image.getPixelColor(x, y) === realColor) {
+    return false;
+  }
+  image.setPixelColor(Jimp.cssColorToHex(realColor), x, y);
+  hub.data({ x, y, color: cssColor });
   saveImageToFile();
 
   if (config.logEvents && req) {
     mongoHelper.collection("events").insertOne({
-      px: { x, y, color },
+      px: { x, y, color: cssColor },
       meta: {
         ip: req.ip,
         userAgent: req.headers["user-agent"],
@@ -65,6 +70,8 @@ function setPixel(x, y, color, req) {
       }
     });
   }
+
+  return true;
 }
 
 /**

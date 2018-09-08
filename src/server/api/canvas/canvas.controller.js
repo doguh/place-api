@@ -21,8 +21,13 @@ async function get(req, res) {
  */
 async function post(req, res) {
   const requestData = Joi.attempt(req.body, schemas.post);
-  canvas.setPixel(requestData.x, requestData.y, requestData.color, req);
-  res.status(200).send({ success: true });
+  const updated = canvas.setPixel(
+    requestData.x,
+    requestData.y,
+    requestData.color,
+    req
+  );
+  res.status(200).send({ updated });
 }
 
 module.exports = {
