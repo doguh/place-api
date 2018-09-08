@@ -59,4 +59,20 @@ router.get("/sub", sseHub({ hub }), () => {
   console.log("new suscriber");
 });
 
+/**
+ * @api {get} /api/canvas/snapshot
+ * @apiGroup canvas
+ *
+ * @apiDescription Returns a snapshot of the canvas
+ *
+ * @apiParamExample {json} (query) Request-Example:
+ * {}
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ * {
+ * }
+ */
+router.get("/snapshot", wrapper(controller.getSnapshot));
+
 module.exports = router;

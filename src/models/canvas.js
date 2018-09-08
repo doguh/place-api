@@ -75,6 +75,14 @@ function setPixel(x, y, color, req) {
 }
 
 /**
+ * Returns a snapshot of the canvas
+ * @returns {Promise<Buffer>} png buffer
+ */
+function getSnapshot() {
+  return image.getBufferAsync(Jimp.MIME_PNG);
+}
+
+/**
  * Throttled function that saves the buffer data to the filesystem,
  * at most every 5 seconds
  */
@@ -91,5 +99,6 @@ module.exports = {
   init,
   hub,
   getCanvasData,
-  setPixel
+  setPixel,
+  getSnapshot
 };
