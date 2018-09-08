@@ -1,6 +1,6 @@
 {
   "name": "place-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "@toverux/expresse": "^2.4.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "jimp": "^0.4.0",
     "joi": "^13.6.0",
     "lodash": "^4.17.10",
     "mongodb": "^3.1.4"

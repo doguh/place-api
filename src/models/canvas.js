@@ -1,13 +1,9 @@
 const fs = require("fs");
+const Jimp = require("jimp");
 const { throttle } = require("lodash");
 const { Hub } = require("@toverux/expresse");
 const config = require("../config");
 const mongoHelper = require("../helpers/mongo");
-
-/**
- * Buffer used to store canvas pixels
- */
-const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
 
 /**
  * SSE Hub, used to notify clients of color changes
@@ -15,25 +11,29 @@ const buffer = Buffer.alloc(config.canvas.width * config.canvas.height, 0);
 const hub = new Hub();
 
 /**
- * initialize the canvas
- * @returns {void}
+ * Jimp Image
  */
-function init() {
+const image = new Jimp(config.canvas.width, config.canvas.height, "#FFFFFFFF");
+
+/**
+ * initialize the canvas
+ * @returns {Promise}
+ */
+async function init() {
   try {
-    const savedBuffer = fs.readFileSync(config.canvas.file);
-    savedBuffer.copy(buffer);
+    const savedImage = await Jimp.read(config.canvas.file);
+    image.composite(savedImage, 0, 0);
   } catch (error) {
-    console.log(`buffer file ${config.canvas.file} does not exist yet`);
-    fs.writeFileSync(config.canvas.file, buffer);
+    console.log(`file ${config.canvas.file} does not exist yet`);
   }
 }
 
 /**
  * Get the canvas data
- * @returns {any} object containing informations about canvas
+ * @returns {Promise<any>} object containing informations about canvas
  */
-function getCanvasData() {
-  const data = buffer.toString("base64");
+async function getCanvasData() {
+  const data = await image.getBase64Async(Jimp.MIME_PNG);
   return {
     width: config.canvas.width,
     height: config.canvas.height,
@@ -51,13 +51,18 @@ function getCanvasData() {
  * @returns {boolean} true in case of success
  */
 function setPixel(x, y, color, req) {
-  buffer.writeInt8(color, x + y * config.canvas.width);
-  hub.data({ x, y, color });
-  saveBufferToFile();
+  const cssColor = config.canvas.colors[color];
+  const realColor = Jimp.cssColorToHex(cssColor);
+  if (image.getPixelColor(x, y) === realColor) {
+    return false;
+  }
+  image.setPixelColor(Jimp.cssColorToHex(realColor), x, y);
+  hub.data({ x, y, color: cssColor });
+  saveImageToFile();
 
   if (config.logEvents && req) {
     mongoHelper.collection("events").insertOne({
-      px: { x, y, color },
+      px: { x, y, color: cssColor },
       meta: {
         ip: req.ip,
         userAgent: req.headers["user-agent"],
@@ -65,24 +70,35 @@ function setPixel(x, y, color, req) {
       }
     });
   }
+
+  return true;
+}
+
+/**
+ * Returns a snapshot of the canvas
+ * @returns {Promise<Buffer>} png buffer
+ */
+function getSnapshot() {
+  return image.getBufferAsync(Jimp.MIME_PNG);
 }
 
 /**
  * Throttled function that saves the buffer data to the filesystem,
  * at most every 5 seconds
  */
-const saveBufferToFile = throttle(() => {
-  console.log("saving buffer data to filesystem");
-  fs.writeFile(config.canvas.file, buffer, err => {
-    if (err) {
-      console.error(err, "error while saving buffer to file");
-    }
-  });
+const saveImageToFile = throttle(async () => {
+  console.log("saving image to filesystem");
+  try {
+    await image.writeAsync(config.canvas.file);
+  } catch (error) {
+    console.error(err, "error while saving image to file");
+  }
 }, config.canvas.saveThrottle);
 
 module.exports = {
   init,
   hub,
   getCanvasData,
-  setPixel
+  setPixel,
+  getSnapshot
 };

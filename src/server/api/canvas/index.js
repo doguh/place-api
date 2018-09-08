@@ -43,7 +43,7 @@ router.get("/", wrapper(controller.get));
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  * {
- *   success: true
+ *   updated: true
  * }
  */
 router.post("/", wrapper(controller.post));
@@ -58,5 +58,21 @@ router.get("/sub", sseHub({ hub }), () => {
   // nothing to do here, everything is done within the sseHub middleware
   console.log("new suscriber");
 });
+
+/**
+ * @api {get} /api/canvas/snapshot
+ * @apiGroup canvas
+ *
+ * @apiDescription Returns a snapshot of the canvas
+ *
+ * @apiParamExample {json} (query) Request-Example:
+ * {}
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ * {
+ * }
+ */
+router.get("/snapshot", wrapper(controller.getSnapshot));
 
 module.exports = router;
