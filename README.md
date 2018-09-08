@@ -18,7 +18,7 @@ npm run start:dev
 | Name                 | Description                                                                            | Default         |
 | -------------------- | -------------------------------------------------------------------------------------- | --------------- |
 | CANVAS_HEIGHT        | Height of the canvas                                                                   | 256             |
-| CANVAS_SAVE_FILE     | Path to the file were should be stored the canvas data                                 | canvas.buff     |
+| CANVAS_SAVE_FILE     | Path to the file used to store the canvas data                                         | canvas.png      |
 | CANVAS_SAVE_THROTTLE | Save canvas at most once per every x milliseconds                                      | 5000            |
 | CANVAS_WIDTH         | Width of the canvas                                                                    | 256             |
 | DB_NAME              | Database name used to store events                                                     | place           |

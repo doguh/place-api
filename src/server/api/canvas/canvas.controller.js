@@ -9,7 +9,7 @@ const canvas = require("../../../models/canvas");
  * @returns {Promise<any>}
  */
 async function get(req, res) {
-  const data = canvas.getCanvasData();
+  const data = await canvas.getCanvasData();
   res.status(200).send(data);
 }
 

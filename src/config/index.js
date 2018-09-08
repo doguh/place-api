@@ -5,7 +5,7 @@ module.exports = {
   canvas: {
     width: process.env.CANVAS_WIDTH || 256,
     height: process.env.CANVAS_HEIGHT || 256,
-    file: process.env.CANVAS_SAVE_FILE || "./canvas.buff",
+    file: process.env.CANVAS_SAVE_FILE || "./canvas.png",
     saveThrottle: process.env.CANVAS_SAVE_THROTTLE || 5000,
     colors: [
       "#ffffff", // white
