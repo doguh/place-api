@@ -23,7 +23,8 @@ module.exports = {
       "#0000ea", // blue
       "#820080", // purple
       "#cf6ee4", // lightpurple
-      "#ffa7d1" // pink
+      "#ffa7d1", // pink
+      "#ffd7b4" // beige
     ]
   },
   db: {
